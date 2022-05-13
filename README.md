@@ -5,7 +5,8 @@
 
 # Codacy
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/f035c208b8224c6880bc6addf055f9cc)](https://www.codacy.com/gh/Mshadab123/M3_WiperControlSystem/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Mshadab123/M3_WiperControlSystem&amp;utm_campaign=Badge_Grade)
-
+# CodeQL
+[![CodeQL](https://github.com/Mshadab123/M3_WiperControlSystem/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/Mshadab123/M3_WiperControlSystem/actions/workflows/c-cpp.yml)
 
 # Requriments
 
