@@ -1,6 +1,6 @@
 /**
  * @file carwiper.c
- * @author MShadab
+ * @author M Shadab
  * @brief car wiper control
  * @version 0.1
  * @date 2022-05-09
