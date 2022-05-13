@@ -1,0 +1,809 @@
+
+NEWP.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   000001a8  08000000  08000000  00010000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         000004e0  080001a8  080001a8  000101a8  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000000  08000688  08000690  00010690  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  3 .ARM.extab    00000000  08000688  08000688  00010690  2**0
+                  CONTENTS
+  4 .ARM          00000000  08000688  08000688  00010690  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  08000688  08000690  00010690  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  08000688  08000688  00010688  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .fini_array   00000004  0800068c  0800068c  0001068c  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  8 .data         00000000  20000000  20000000  00010690  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .ccmram       00000000  10000000  10000000  00010690  2**0
+                  CONTENTS
+ 10 .bss          0000001c  20000000  20000000  00020000  2**2
+                  ALLOC
+ 11 ._user_heap_stack 00000604  2000001c  2000001c  00020000  2**0
+                  ALLOC
+ 12 .ARM.attributes 00000030  00000000  00000000  00010690  2**0
+                  CONTENTS, READONLY
+ 13 .debug_info   00000095  00000000  00000000  000106c0  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_abbrev 00000061  00000000  00000000  00010755  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_aranges 00000048  00000000  00000000  000107b8  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_ranges 00000030  00000000  00000000  00010800  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_macro  00000b13  00000000  00000000  00010830  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_line   00000380  00000000  00000000  00011343  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .debug_str    00002ffa  00000000  00000000  000116c3  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 20 .comment      00000053  00000000  00000000  000146bd  2**0
+                  CONTENTS, READONLY
+ 21 .debug_frame  00000058  00000000  00000000  00014710  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+080001a8 <__do_global_dtors_aux>:
+ 80001a8:	b510      	push	{r4, lr}
+ 80001aa:	4c05      	ldr	r4, [pc, #20]	; (80001c0 <__do_global_dtors_aux+0x18>)
+ 80001ac:	7823      	ldrb	r3, [r4, #0]
+ 80001ae:	b933      	cbnz	r3, 80001be <__do_global_dtors_aux+0x16>
+ 80001b0:	4b04      	ldr	r3, [pc, #16]	; (80001c4 <__do_global_dtors_aux+0x1c>)
+ 80001b2:	b113      	cbz	r3, 80001ba <__do_global_dtors_aux+0x12>
+ 80001b4:	4804      	ldr	r0, [pc, #16]	; (80001c8 <__do_global_dtors_aux+0x20>)
+ 80001b6:	f3af 8000 	nop.w
+ 80001ba:	2301      	movs	r3, #1
+ 80001bc:	7023      	strb	r3, [r4, #0]
+ 80001be:	bd10      	pop	{r4, pc}
+ 80001c0:	20000000 	.word	0x20000000
+ 80001c4:	00000000 	.word	0x00000000
+ 80001c8:	08000670 	.word	0x08000670
+
+080001cc <frame_dummy>:
+ 80001cc:	b508      	push	{r3, lr}
+ 80001ce:	4b03      	ldr	r3, [pc, #12]	; (80001dc <frame_dummy+0x10>)
+ 80001d0:	b11b      	cbz	r3, 80001da <frame_dummy+0xe>
+ 80001d2:	4903      	ldr	r1, [pc, #12]	; (80001e0 <frame_dummy+0x14>)
+ 80001d4:	4803      	ldr	r0, [pc, #12]	; (80001e4 <frame_dummy+0x18>)
+ 80001d6:	f3af 8000 	nop.w
+ 80001da:	bd08      	pop	{r3, pc}
+ 80001dc:	00000000 	.word	0x00000000
+ 80001e0:	20000004 	.word	0x20000004
+ 80001e4:	08000670 	.word	0x08000670
+
+080001e8 <main>:
+//Adding Base address and offset address to clear Previous Switch settings
+
+
+//STARTING of Main PROGRAM
+int main()
+{
+ 80001e8:	b480      	push	{r7}
+ 80001ea:	b085      	sub	sp, #20
+ 80001ec:	af00      	add	r7, sp, #0
+	int i,b=0,j=0;  //Declaring and Initilizing Variables
+ 80001ee:	2300      	movs	r3, #0
+ 80001f0:	60bb      	str	r3, [r7, #8]
+ 80001f2:	2300      	movs	r3, #0
+ 80001f4:	607b      	str	r3, [r7, #4]
+	RCC_AHB1ENR |= (1<<3)|(1<<0); //Enabling the LED and the switch
+ 80001f6:	4b9d      	ldr	r3, [pc, #628]	; (800046c <main+0x284>)
+ 80001f8:	681b      	ldr	r3, [r3, #0]
+ 80001fa:	4a9c      	ldr	r2, [pc, #624]	; (800046c <main+0x284>)
+ 80001fc:	f043 0309 	orr.w	r3, r3, #9
+ 8000200:	6013      	str	r3, [r2, #0]
+	GPIOD_MODE = 0; //For Clear LED
+ 8000202:	4b9b      	ldr	r3, [pc, #620]	; (8000470 <main+0x288>)
+ 8000204:	2200      	movs	r2, #0
+ 8000206:	601a      	str	r2, [r3, #0]
+	GPIOA_MODE = 0; //For Clear Switch
+ 8000208:	4b9a      	ldr	r3, [pc, #616]	; (8000474 <main+0x28c>)
+ 800020a:	2200      	movs	r2, #0
+ 800020c:	601a      	str	r2, [r3, #0]
+	GPIOA_IDR |= 1<<3;
+ 800020e:	4b9a      	ldr	r3, [pc, #616]	; (8000478 <main+0x290>)
+ 8000210:	681b      	ldr	r3, [r3, #0]
+ 8000212:	4a99      	ldr	r2, [pc, #612]	; (8000478 <main+0x290>)
+ 8000214:	f043 0308 	orr.w	r3, r3, #8
+ 8000218:	6013      	str	r3, [r2, #0]
+	GPIOD_MODE |= (0<<25)|(1<<24);  //to assign LED 12 as output pin
+ 800021a:	4b95      	ldr	r3, [pc, #596]	; (8000470 <main+0x288>)
+ 800021c:	681b      	ldr	r3, [r3, #0]
+ 800021e:	4a94      	ldr	r2, [pc, #592]	; (8000470 <main+0x288>)
+ 8000220:	f043 7380 	orr.w	r3, r3, #16777216	; 0x1000000
+ 8000224:	6013      	str	r3, [r2, #0]
+	GPIOD_MODE |= (0<<27)|(1<<26);  //to assign LED 13 as output pin
+ 8000226:	4b92      	ldr	r3, [pc, #584]	; (8000470 <main+0x288>)
+ 8000228:	681b      	ldr	r3, [r3, #0]
+ 800022a:	4a91      	ldr	r2, [pc, #580]	; (8000470 <main+0x288>)
+ 800022c:	f043 6380 	orr.w	r3, r3, #67108864	; 0x4000000
+ 8000230:	6013      	str	r3, [r2, #0]
+	GPIOD_MODE |= (0<<29)|(1<<28);  //to assign LED 14 as output pin
+ 8000232:	4b8f      	ldr	r3, [pc, #572]	; (8000470 <main+0x288>)
+ 8000234:	681b      	ldr	r3, [r3, #0]
+ 8000236:	4a8e      	ldr	r2, [pc, #568]	; (8000470 <main+0x288>)
+ 8000238:	f043 5380 	orr.w	r3, r3, #268435456	; 0x10000000
+ 800023c:	6013      	str	r3, [r2, #0]
+	GPIOD_MODE |= (0<<31)|(1<<30);  //to assign LED 14 as output pin as per the Datasheet
+ 800023e:	4b8c      	ldr	r3, [pc, #560]	; (8000470 <main+0x288>)
+ 8000240:	681b      	ldr	r3, [r3, #0]
+ 8000242:	4a8b      	ldr	r2, [pc, #556]	; (8000470 <main+0x288>)
+ 8000244:	f043 4380 	orr.w	r3, r3, #1073741824	; 0x40000000
+ 8000248:	6013      	str	r3, [r2, #0]
+	GPIOA_MODE |= (0<<1)|(0<<0);    //to assign Switch as input pin as per the Datasheet
+ 800024a:	4b8a      	ldr	r3, [pc, #552]	; (8000474 <main+0x28c>)
+ 800024c:	4a89      	ldr	r2, [pc, #548]	; (8000474 <main+0x28c>)
+ 800024e:	681b      	ldr	r3, [r3, #0]
+ 8000250:	6013      	str	r3, [r2, #0]
+	GPIOD_ODR = 0X00;
+ 8000252:	4b8a      	ldr	r3, [pc, #552]	; (800047c <main+0x294>)
+ 8000254:	2200      	movs	r2, #0
+ 8000256:	601a      	str	r2, [r3, #0]
+	while(1)
+	{
+					while((GPIOA_IDR & 0x01) == 1) // Switch Status On
+ 8000258:	e002      	b.n	8000260 <main+0x78>
+					{
+						b++; //Increment for Switch
+ 800025a:	68bb      	ldr	r3, [r7, #8]
+ 800025c:	3301      	adds	r3, #1
+ 800025e:	60bb      	str	r3, [r7, #8]
+					while((GPIOA_IDR & 0x01) == 1) // Switch Status On
+ 8000260:	4b85      	ldr	r3, [pc, #532]	; (8000478 <main+0x290>)
+ 8000262:	681b      	ldr	r3, [r3, #0]
+ 8000264:	f003 0301 	and.w	r3, r3, #1
+ 8000268:	2b01      	cmp	r3, #1
+ 800026a:	d0f6      	beq.n	800025a <main+0x72>
+					}
+					if(b>30000)
+ 800026c:	68bb      	ldr	r3, [r7, #8]
+ 800026e:	f247 5230 	movw	r2, #30000	; 0x7530
+ 8000272:	4293      	cmp	r3, r2
+ 8000274:	dd12      	ble.n	800029c <main+0xb4>
+				    {
+					b=0;//RED Led should be in ON state
+ 8000276:	2300      	movs	r3, #0
+ 8000278:	60bb      	str	r3, [r7, #8]
+					GPIOD_ODR |= 1<<14;
+ 800027a:	4b80      	ldr	r3, [pc, #512]	; (800047c <main+0x294>)
+ 800027c:	681b      	ldr	r3, [r3, #0]
+ 800027e:	4a7f      	ldr	r2, [pc, #508]	; (800047c <main+0x294>)
+ 8000280:	f443 4380 	orr.w	r3, r3, #16384	; 0x4000
+ 8000284:	6013      	str	r3, [r2, #0]
+					for(i=0;i<100000;i++);
+ 8000286:	2300      	movs	r3, #0
+ 8000288:	60fb      	str	r3, [r7, #12]
+ 800028a:	e002      	b.n	8000292 <main+0xaa>
+ 800028c:	68fb      	ldr	r3, [r7, #12]
+ 800028e:	3301      	adds	r3, #1
+ 8000290:	60fb      	str	r3, [r7, #12]
+ 8000292:	68fb      	ldr	r3, [r7, #12]
+ 8000294:	4a7a      	ldr	r2, [pc, #488]	; (8000480 <main+0x298>)
+ 8000296:	4293      	cmp	r3, r2
+ 8000298:	ddf8      	ble.n	800028c <main+0xa4>
+ 800029a:	e009      	b.n	80002b0 <main+0xc8>
+					}
+					else if(b>0 && b<30000)
+ 800029c:	68bb      	ldr	r3, [r7, #8]
+ 800029e:	2b00      	cmp	r3, #0
+ 80002a0:	dd06      	ble.n	80002b0 <main+0xc8>
+ 80002a2:	68bb      	ldr	r3, [r7, #8]
+ 80002a4:	f247 522f 	movw	r2, #29999	; 0x752f
+ 80002a8:	4293      	cmp	r3, r2
+ 80002aa:	dc01      	bgt.n	80002b0 <main+0xc8>
+					{
+					j=1;
+ 80002ac:	2301      	movs	r3, #1
+ 80002ae:	607b      	str	r3, [r7, #4]
+                    }
+					else
+					{
+
+					}
+						if(j==1)
+ 80002b0:	687b      	ldr	r3, [r7, #4]
+ 80002b2:	2b01      	cmp	r3, #1
+ 80002b4:	d1d4      	bne.n	8000260 <main+0x78>
+						{
+
+					    //By using Fast Frequency delay
+
+				        for(j=0;j<5;j++) //For LED GREEN
+ 80002b6:	2300      	movs	r3, #0
+ 80002b8:	607b      	str	r3, [r7, #4]
+ 80002ba:	e024      	b.n	8000306 <main+0x11e>
+						{
+						GPIOD_ODR |= 1<<12;
+ 80002bc:	4b6f      	ldr	r3, [pc, #444]	; (800047c <main+0x294>)
+ 80002be:	681b      	ldr	r3, [r3, #0]
+ 80002c0:	4a6e      	ldr	r2, [pc, #440]	; (800047c <main+0x294>)
+ 80002c2:	f443 5380 	orr.w	r3, r3, #4096	; 0x1000
+ 80002c6:	6013      	str	r3, [r2, #0]
+						for(i=0;i<20000;i++);
+ 80002c8:	2300      	movs	r3, #0
+ 80002ca:	60fb      	str	r3, [r7, #12]
+ 80002cc:	e002      	b.n	80002d4 <main+0xec>
+ 80002ce:	68fb      	ldr	r3, [r7, #12]
+ 80002d0:	3301      	adds	r3, #1
+ 80002d2:	60fb      	str	r3, [r7, #12]
+ 80002d4:	68fb      	ldr	r3, [r7, #12]
+ 80002d6:	f644 621f 	movw	r2, #19999	; 0x4e1f
+ 80002da:	4293      	cmp	r3, r2
+ 80002dc:	ddf7      	ble.n	80002ce <main+0xe6>
+						GPIOD_ODR &= ~(1<<12);
+ 80002de:	4b67      	ldr	r3, [pc, #412]	; (800047c <main+0x294>)
+ 80002e0:	681b      	ldr	r3, [r3, #0]
+ 80002e2:	4a66      	ldr	r2, [pc, #408]	; (800047c <main+0x294>)
+ 80002e4:	f423 5380 	bic.w	r3, r3, #4096	; 0x1000
+ 80002e8:	6013      	str	r3, [r2, #0]
+						for(i=0;i>=20000;i++);
+ 80002ea:	2300      	movs	r3, #0
+ 80002ec:	60fb      	str	r3, [r7, #12]
+ 80002ee:	e002      	b.n	80002f6 <main+0x10e>
+ 80002f0:	68fb      	ldr	r3, [r7, #12]
+ 80002f2:	3301      	adds	r3, #1
+ 80002f4:	60fb      	str	r3, [r7, #12]
+ 80002f6:	68fb      	ldr	r3, [r7, #12]
+ 80002f8:	f644 621f 	movw	r2, #19999	; 0x4e1f
+ 80002fc:	4293      	cmp	r3, r2
+ 80002fe:	dcf7      	bgt.n	80002f0 <main+0x108>
+				        for(j=0;j<5;j++) //For LED GREEN
+ 8000300:	687b      	ldr	r3, [r7, #4]
+ 8000302:	3301      	adds	r3, #1
+ 8000304:	607b      	str	r3, [r7, #4]
+ 8000306:	687b      	ldr	r3, [r7, #4]
+ 8000308:	2b04      	cmp	r3, #4
+ 800030a:	ddd7      	ble.n	80002bc <main+0xd4>
+						}
+						for(j=0;j<5;j++)  //For LED ORANGE
+ 800030c:	2300      	movs	r3, #0
+ 800030e:	607b      	str	r3, [r7, #4]
+ 8000310:	e024      	b.n	800035c <main+0x174>
+						{
+						GPIOD_ODR |= 1<<13;
+ 8000312:	4b5a      	ldr	r3, [pc, #360]	; (800047c <main+0x294>)
+ 8000314:	681b      	ldr	r3, [r3, #0]
+ 8000316:	4a59      	ldr	r2, [pc, #356]	; (800047c <main+0x294>)
+ 8000318:	f443 5300 	orr.w	r3, r3, #8192	; 0x2000
+ 800031c:	6013      	str	r3, [r2, #0]
+						for(i=0;i<20000;i++);
+ 800031e:	2300      	movs	r3, #0
+ 8000320:	60fb      	str	r3, [r7, #12]
+ 8000322:	e002      	b.n	800032a <main+0x142>
+ 8000324:	68fb      	ldr	r3, [r7, #12]
+ 8000326:	3301      	adds	r3, #1
+ 8000328:	60fb      	str	r3, [r7, #12]
+ 800032a:	68fb      	ldr	r3, [r7, #12]
+ 800032c:	f644 621f 	movw	r2, #19999	; 0x4e1f
+ 8000330:	4293      	cmp	r3, r2
+ 8000332:	ddf7      	ble.n	8000324 <main+0x13c>
+						GPIOD_ODR &= ~(1<<13);
+ 8000334:	4b51      	ldr	r3, [pc, #324]	; (800047c <main+0x294>)
+ 8000336:	681b      	ldr	r3, [r3, #0]
+ 8000338:	4a50      	ldr	r2, [pc, #320]	; (800047c <main+0x294>)
+ 800033a:	f423 5300 	bic.w	r3, r3, #8192	; 0x2000
+ 800033e:	6013      	str	r3, [r2, #0]
+					    for(i=0;i>=20000;i++);
+ 8000340:	2300      	movs	r3, #0
+ 8000342:	60fb      	str	r3, [r7, #12]
+ 8000344:	e002      	b.n	800034c <main+0x164>
+ 8000346:	68fb      	ldr	r3, [r7, #12]
+ 8000348:	3301      	adds	r3, #1
+ 800034a:	60fb      	str	r3, [r7, #12]
+ 800034c:	68fb      	ldr	r3, [r7, #12]
+ 800034e:	f644 621f 	movw	r2, #19999	; 0x4e1f
+ 8000352:	4293      	cmp	r3, r2
+ 8000354:	dcf7      	bgt.n	8000346 <main+0x15e>
+						for(j=0;j<5;j++)  //For LED ORANGE
+ 8000356:	687b      	ldr	r3, [r7, #4]
+ 8000358:	3301      	adds	r3, #1
+ 800035a:	607b      	str	r3, [r7, #4]
+ 800035c:	687b      	ldr	r3, [r7, #4]
+ 800035e:	2b04      	cmp	r3, #4
+ 8000360:	ddd7      	ble.n	8000312 <main+0x12a>
+						}
+						for(j=0;j<5;j++)   //For LED BLUE
+ 8000362:	2300      	movs	r3, #0
+ 8000364:	607b      	str	r3, [r7, #4]
+ 8000366:	e024      	b.n	80003b2 <main+0x1ca>
+						{
+						GPIOD_ODR |= 1<<15;
+ 8000368:	4b44      	ldr	r3, [pc, #272]	; (800047c <main+0x294>)
+ 800036a:	681b      	ldr	r3, [r3, #0]
+ 800036c:	4a43      	ldr	r2, [pc, #268]	; (800047c <main+0x294>)
+ 800036e:	f443 4300 	orr.w	r3, r3, #32768	; 0x8000
+ 8000372:	6013      	str	r3, [r2, #0]
+						for(i=0;i<20000;i++);
+ 8000374:	2300      	movs	r3, #0
+ 8000376:	60fb      	str	r3, [r7, #12]
+ 8000378:	e002      	b.n	8000380 <main+0x198>
+ 800037a:	68fb      	ldr	r3, [r7, #12]
+ 800037c:	3301      	adds	r3, #1
+ 800037e:	60fb      	str	r3, [r7, #12]
+ 8000380:	68fb      	ldr	r3, [r7, #12]
+ 8000382:	f644 621f 	movw	r2, #19999	; 0x4e1f
+ 8000386:	4293      	cmp	r3, r2
+ 8000388:	ddf7      	ble.n	800037a <main+0x192>
+						GPIOD_ODR &= ~(1<<15);
+ 800038a:	4b3c      	ldr	r3, [pc, #240]	; (800047c <main+0x294>)
+ 800038c:	681b      	ldr	r3, [r3, #0]
+ 800038e:	4a3b      	ldr	r2, [pc, #236]	; (800047c <main+0x294>)
+ 8000390:	f423 4300 	bic.w	r3, r3, #32768	; 0x8000
+ 8000394:	6013      	str	r3, [r2, #0]
+						for(i=0;i>=20000;i++);
+ 8000396:	2300      	movs	r3, #0
+ 8000398:	60fb      	str	r3, [r7, #12]
+ 800039a:	e002      	b.n	80003a2 <main+0x1ba>
+ 800039c:	68fb      	ldr	r3, [r7, #12]
+ 800039e:	3301      	adds	r3, #1
+ 80003a0:	60fb      	str	r3, [r7, #12]
+ 80003a2:	68fb      	ldr	r3, [r7, #12]
+ 80003a4:	f644 621f 	movw	r2, #19999	; 0x4e1f
+ 80003a8:	4293      	cmp	r3, r2
+ 80003aa:	dcf7      	bgt.n	800039c <main+0x1b4>
+						for(j=0;j<5;j++)   //For LED BLUE
+ 80003ac:	687b      	ldr	r3, [r7, #4]
+ 80003ae:	3301      	adds	r3, #1
+ 80003b0:	607b      	str	r3, [r7, #4]
+ 80003b2:	687b      	ldr	r3, [r7, #4]
+ 80003b4:	2b04      	cmp	r3, #4
+ 80003b6:	ddd7      	ble.n	8000368 <main+0x180>
+						}
+
+						//Medium Speed Delay
+
+						for(j=0;j<5;j++)  //For LED GREEN
+ 80003b8:	2300      	movs	r3, #0
+ 80003ba:	607b      	str	r3, [r7, #4]
+ 80003bc:	e024      	b.n	8000408 <main+0x220>
+						{
+						GPIOD_ODR |= 1<<12;
+ 80003be:	4b2f      	ldr	r3, [pc, #188]	; (800047c <main+0x294>)
+ 80003c0:	681b      	ldr	r3, [r3, #0]
+ 80003c2:	4a2e      	ldr	r2, [pc, #184]	; (800047c <main+0x294>)
+ 80003c4:	f443 5380 	orr.w	r3, r3, #4096	; 0x1000
+ 80003c8:	6013      	str	r3, [r2, #0]
+						for(i=0;i<40000;i++);
+ 80003ca:	2300      	movs	r3, #0
+ 80003cc:	60fb      	str	r3, [r7, #12]
+ 80003ce:	e002      	b.n	80003d6 <main+0x1ee>
+ 80003d0:	68fb      	ldr	r3, [r7, #12]
+ 80003d2:	3301      	adds	r3, #1
+ 80003d4:	60fb      	str	r3, [r7, #12]
+ 80003d6:	68fb      	ldr	r3, [r7, #12]
+ 80003d8:	f649 423f 	movw	r2, #39999	; 0x9c3f
+ 80003dc:	4293      	cmp	r3, r2
+ 80003de:	ddf7      	ble.n	80003d0 <main+0x1e8>
+						GPIOD_ODR &= ~(1<<12);
+ 80003e0:	4b26      	ldr	r3, [pc, #152]	; (800047c <main+0x294>)
+ 80003e2:	681b      	ldr	r3, [r3, #0]
+ 80003e4:	4a25      	ldr	r2, [pc, #148]	; (800047c <main+0x294>)
+ 80003e6:	f423 5380 	bic.w	r3, r3, #4096	; 0x1000
+ 80003ea:	6013      	str	r3, [r2, #0]
+						for(i=0;i>=40000;i++);
+ 80003ec:	2300      	movs	r3, #0
+ 80003ee:	60fb      	str	r3, [r7, #12]
+ 80003f0:	e002      	b.n	80003f8 <main+0x210>
+ 80003f2:	68fb      	ldr	r3, [r7, #12]
+ 80003f4:	3301      	adds	r3, #1
+ 80003f6:	60fb      	str	r3, [r7, #12]
+ 80003f8:	68fb      	ldr	r3, [r7, #12]
+ 80003fa:	f649 423f 	movw	r2, #39999	; 0x9c3f
+ 80003fe:	4293      	cmp	r3, r2
+ 8000400:	dcf7      	bgt.n	80003f2 <main+0x20a>
+						for(j=0;j<5;j++)  //For LED GREEN
+ 8000402:	687b      	ldr	r3, [r7, #4]
+ 8000404:	3301      	adds	r3, #1
+ 8000406:	607b      	str	r3, [r7, #4]
+ 8000408:	687b      	ldr	r3, [r7, #4]
+ 800040a:	2b04      	cmp	r3, #4
+ 800040c:	ddd7      	ble.n	80003be <main+0x1d6>
+						}
+						for(j=0;j<5;j++)  //For LED ORANGE
+ 800040e:	2300      	movs	r3, #0
+ 8000410:	607b      	str	r3, [r7, #4]
+ 8000412:	e024      	b.n	800045e <main+0x276>
+						{
+						GPIOD_ODR |= 1<<13;
+ 8000414:	4b19      	ldr	r3, [pc, #100]	; (800047c <main+0x294>)
+ 8000416:	681b      	ldr	r3, [r3, #0]
+ 8000418:	4a18      	ldr	r2, [pc, #96]	; (800047c <main+0x294>)
+ 800041a:	f443 5300 	orr.w	r3, r3, #8192	; 0x2000
+ 800041e:	6013      	str	r3, [r2, #0]
+						for(i=0;i<40000;i++);
+ 8000420:	2300      	movs	r3, #0
+ 8000422:	60fb      	str	r3, [r7, #12]
+ 8000424:	e002      	b.n	800042c <main+0x244>
+ 8000426:	68fb      	ldr	r3, [r7, #12]
+ 8000428:	3301      	adds	r3, #1
+ 800042a:	60fb      	str	r3, [r7, #12]
+ 800042c:	68fb      	ldr	r3, [r7, #12]
+ 800042e:	f649 423f 	movw	r2, #39999	; 0x9c3f
+ 8000432:	4293      	cmp	r3, r2
+ 8000434:	ddf7      	ble.n	8000426 <main+0x23e>
+						GPIOD_ODR &= ~(1<<13);
+ 8000436:	4b11      	ldr	r3, [pc, #68]	; (800047c <main+0x294>)
+ 8000438:	681b      	ldr	r3, [r3, #0]
+ 800043a:	4a10      	ldr	r2, [pc, #64]	; (800047c <main+0x294>)
+ 800043c:	f423 5300 	bic.w	r3, r3, #8192	; 0x2000
+ 8000440:	6013      	str	r3, [r2, #0]
+						for(i=0;i>=40000;i++);
+ 8000442:	2300      	movs	r3, #0
+ 8000444:	60fb      	str	r3, [r7, #12]
+ 8000446:	e002      	b.n	800044e <main+0x266>
+ 8000448:	68fb      	ldr	r3, [r7, #12]
+ 800044a:	3301      	adds	r3, #1
+ 800044c:	60fb      	str	r3, [r7, #12]
+ 800044e:	68fb      	ldr	r3, [r7, #12]
+ 8000450:	f649 423f 	movw	r2, #39999	; 0x9c3f
+ 8000454:	4293      	cmp	r3, r2
+ 8000456:	dcf7      	bgt.n	8000448 <main+0x260>
+						for(j=0;j<5;j++)  //For LED ORANGE
+ 8000458:	687b      	ldr	r3, [r7, #4]
+ 800045a:	3301      	adds	r3, #1
+ 800045c:	607b      	str	r3, [r7, #4]
+ 800045e:	687b      	ldr	r3, [r7, #4]
+ 8000460:	2b04      	cmp	r3, #4
+ 8000462:	ddd7      	ble.n	8000414 <main+0x22c>
+						}
+						for(j=0;j<5;j++)  //For LED BLUE
+ 8000464:	2300      	movs	r3, #0
+ 8000466:	607b      	str	r3, [r7, #4]
+ 8000468:	e031      	b.n	80004ce <main+0x2e6>
+ 800046a:	bf00      	nop
+ 800046c:	40023830 	.word	0x40023830
+ 8000470:	40020c00 	.word	0x40020c00
+ 8000474:	40020000 	.word	0x40020000
+ 8000478:	40020010 	.word	0x40020010
+ 800047c:	40020c14 	.word	0x40020c14
+ 8000480:	0001869f 	.word	0x0001869f
+						{
+						GPIOD_ODR |= 1<<15;
+ 8000484:	4b51      	ldr	r3, [pc, #324]	; (80005cc <main+0x3e4>)
+ 8000486:	681b      	ldr	r3, [r3, #0]
+ 8000488:	4a50      	ldr	r2, [pc, #320]	; (80005cc <main+0x3e4>)
+ 800048a:	f443 4300 	orr.w	r3, r3, #32768	; 0x8000
+ 800048e:	6013      	str	r3, [r2, #0]
+						for(i=0;i<40000;i++);
+ 8000490:	2300      	movs	r3, #0
+ 8000492:	60fb      	str	r3, [r7, #12]
+ 8000494:	e002      	b.n	800049c <main+0x2b4>
+ 8000496:	68fb      	ldr	r3, [r7, #12]
+ 8000498:	3301      	adds	r3, #1
+ 800049a:	60fb      	str	r3, [r7, #12]
+ 800049c:	68fb      	ldr	r3, [r7, #12]
+ 800049e:	f649 423f 	movw	r2, #39999	; 0x9c3f
+ 80004a2:	4293      	cmp	r3, r2
+ 80004a4:	ddf7      	ble.n	8000496 <main+0x2ae>
+					    GPIOD_ODR &= ~(1<<15);
+ 80004a6:	4b49      	ldr	r3, [pc, #292]	; (80005cc <main+0x3e4>)
+ 80004a8:	681b      	ldr	r3, [r3, #0]
+ 80004aa:	4a48      	ldr	r2, [pc, #288]	; (80005cc <main+0x3e4>)
+ 80004ac:	f423 4300 	bic.w	r3, r3, #32768	; 0x8000
+ 80004b0:	6013      	str	r3, [r2, #0]
+						for(i=0;i>=40000;i++);
+ 80004b2:	2300      	movs	r3, #0
+ 80004b4:	60fb      	str	r3, [r7, #12]
+ 80004b6:	e002      	b.n	80004be <main+0x2d6>
+ 80004b8:	68fb      	ldr	r3, [r7, #12]
+ 80004ba:	3301      	adds	r3, #1
+ 80004bc:	60fb      	str	r3, [r7, #12]
+ 80004be:	68fb      	ldr	r3, [r7, #12]
+ 80004c0:	f649 423f 	movw	r2, #39999	; 0x9c3f
+ 80004c4:	4293      	cmp	r3, r2
+ 80004c6:	dcf7      	bgt.n	80004b8 <main+0x2d0>
+						for(j=0;j<5;j++)  //For LED BLUE
+ 80004c8:	687b      	ldr	r3, [r7, #4]
+ 80004ca:	3301      	adds	r3, #1
+ 80004cc:	607b      	str	r3, [r7, #4]
+ 80004ce:	687b      	ldr	r3, [r7, #4]
+ 80004d0:	2b04      	cmp	r3, #4
+ 80004d2:	ddd7      	ble.n	8000484 <main+0x29c>
+						}
+						//High Speed Delay
+
+						for(j=0;j<5;j++)  //For LED GREEN
+ 80004d4:	2300      	movs	r3, #0
+ 80004d6:	607b      	str	r3, [r7, #4]
+ 80004d8:	e022      	b.n	8000520 <main+0x338>
+					    {
+						GPIOD_ODR |= 1<<12;
+ 80004da:	4b3c      	ldr	r3, [pc, #240]	; (80005cc <main+0x3e4>)
+ 80004dc:	681b      	ldr	r3, [r3, #0]
+ 80004de:	4a3b      	ldr	r2, [pc, #236]	; (80005cc <main+0x3e4>)
+ 80004e0:	f443 5380 	orr.w	r3, r3, #4096	; 0x1000
+ 80004e4:	6013      	str	r3, [r2, #0]
+						for(i=0;i<80000;i++);
+ 80004e6:	2300      	movs	r3, #0
+ 80004e8:	60fb      	str	r3, [r7, #12]
+ 80004ea:	e002      	b.n	80004f2 <main+0x30a>
+ 80004ec:	68fb      	ldr	r3, [r7, #12]
+ 80004ee:	3301      	adds	r3, #1
+ 80004f0:	60fb      	str	r3, [r7, #12]
+ 80004f2:	68fb      	ldr	r3, [r7, #12]
+ 80004f4:	4a36      	ldr	r2, [pc, #216]	; (80005d0 <main+0x3e8>)
+ 80004f6:	4293      	cmp	r3, r2
+ 80004f8:	ddf8      	ble.n	80004ec <main+0x304>
+						GPIOD_ODR &= ~(1<<12);
+ 80004fa:	4b34      	ldr	r3, [pc, #208]	; (80005cc <main+0x3e4>)
+ 80004fc:	681b      	ldr	r3, [r3, #0]
+ 80004fe:	4a33      	ldr	r2, [pc, #204]	; (80005cc <main+0x3e4>)
+ 8000500:	f423 5380 	bic.w	r3, r3, #4096	; 0x1000
+ 8000504:	6013      	str	r3, [r2, #0]
+						for(i=0;i>=80000;i++);
+ 8000506:	2300      	movs	r3, #0
+ 8000508:	60fb      	str	r3, [r7, #12]
+ 800050a:	e002      	b.n	8000512 <main+0x32a>
+ 800050c:	68fb      	ldr	r3, [r7, #12]
+ 800050e:	3301      	adds	r3, #1
+ 8000510:	60fb      	str	r3, [r7, #12]
+ 8000512:	68fb      	ldr	r3, [r7, #12]
+ 8000514:	4a2e      	ldr	r2, [pc, #184]	; (80005d0 <main+0x3e8>)
+ 8000516:	4293      	cmp	r3, r2
+ 8000518:	dcf8      	bgt.n	800050c <main+0x324>
+						for(j=0;j<5;j++)  //For LED GREEN
+ 800051a:	687b      	ldr	r3, [r7, #4]
+ 800051c:	3301      	adds	r3, #1
+ 800051e:	607b      	str	r3, [r7, #4]
+ 8000520:	687b      	ldr	r3, [r7, #4]
+ 8000522:	2b04      	cmp	r3, #4
+ 8000524:	ddd9      	ble.n	80004da <main+0x2f2>
+						}
+						for(j=0;j<5;j++)  //For LED ORANGE
+ 8000526:	2300      	movs	r3, #0
+ 8000528:	607b      	str	r3, [r7, #4]
+ 800052a:	e022      	b.n	8000572 <main+0x38a>
+						{
+						GPIOD_ODR |= 1<<13;
+ 800052c:	4b27      	ldr	r3, [pc, #156]	; (80005cc <main+0x3e4>)
+ 800052e:	681b      	ldr	r3, [r3, #0]
+ 8000530:	4a26      	ldr	r2, [pc, #152]	; (80005cc <main+0x3e4>)
+ 8000532:	f443 5300 	orr.w	r3, r3, #8192	; 0x2000
+ 8000536:	6013      	str	r3, [r2, #0]
+						for(i=0;i<80000;i++);
+ 8000538:	2300      	movs	r3, #0
+ 800053a:	60fb      	str	r3, [r7, #12]
+ 800053c:	e002      	b.n	8000544 <main+0x35c>
+ 800053e:	68fb      	ldr	r3, [r7, #12]
+ 8000540:	3301      	adds	r3, #1
+ 8000542:	60fb      	str	r3, [r7, #12]
+ 8000544:	68fb      	ldr	r3, [r7, #12]
+ 8000546:	4a22      	ldr	r2, [pc, #136]	; (80005d0 <main+0x3e8>)
+ 8000548:	4293      	cmp	r3, r2
+ 800054a:	ddf8      	ble.n	800053e <main+0x356>
+						GPIOD_ODR &= ~(1<<13);
+ 800054c:	4b1f      	ldr	r3, [pc, #124]	; (80005cc <main+0x3e4>)
+ 800054e:	681b      	ldr	r3, [r3, #0]
+ 8000550:	4a1e      	ldr	r2, [pc, #120]	; (80005cc <main+0x3e4>)
+ 8000552:	f423 5300 	bic.w	r3, r3, #8192	; 0x2000
+ 8000556:	6013      	str	r3, [r2, #0]
+						for(i=0;i>=80000;i++);
+ 8000558:	2300      	movs	r3, #0
+ 800055a:	60fb      	str	r3, [r7, #12]
+ 800055c:	e002      	b.n	8000564 <main+0x37c>
+ 800055e:	68fb      	ldr	r3, [r7, #12]
+ 8000560:	3301      	adds	r3, #1
+ 8000562:	60fb      	str	r3, [r7, #12]
+ 8000564:	68fb      	ldr	r3, [r7, #12]
+ 8000566:	4a1a      	ldr	r2, [pc, #104]	; (80005d0 <main+0x3e8>)
+ 8000568:	4293      	cmp	r3, r2
+ 800056a:	dcf8      	bgt.n	800055e <main+0x376>
+						for(j=0;j<5;j++)  //For LED ORANGE
+ 800056c:	687b      	ldr	r3, [r7, #4]
+ 800056e:	3301      	adds	r3, #1
+ 8000570:	607b      	str	r3, [r7, #4]
+ 8000572:	687b      	ldr	r3, [r7, #4]
+ 8000574:	2b04      	cmp	r3, #4
+ 8000576:	ddd9      	ble.n	800052c <main+0x344>
+						}
+						for(j=0;j<5;j++)  //For LED BLUE
+ 8000578:	2300      	movs	r3, #0
+ 800057a:	607b      	str	r3, [r7, #4]
+ 800057c:	e022      	b.n	80005c4 <main+0x3dc>
+						{
+						GPIOD_ODR |= 1<<15;
+ 800057e:	4b13      	ldr	r3, [pc, #76]	; (80005cc <main+0x3e4>)
+ 8000580:	681b      	ldr	r3, [r3, #0]
+ 8000582:	4a12      	ldr	r2, [pc, #72]	; (80005cc <main+0x3e4>)
+ 8000584:	f443 4300 	orr.w	r3, r3, #32768	; 0x8000
+ 8000588:	6013      	str	r3, [r2, #0]
+						for(i=0;i<80000;i++);
+ 800058a:	2300      	movs	r3, #0
+ 800058c:	60fb      	str	r3, [r7, #12]
+ 800058e:	e002      	b.n	8000596 <main+0x3ae>
+ 8000590:	68fb      	ldr	r3, [r7, #12]
+ 8000592:	3301      	adds	r3, #1
+ 8000594:	60fb      	str	r3, [r7, #12]
+ 8000596:	68fb      	ldr	r3, [r7, #12]
+ 8000598:	4a0d      	ldr	r2, [pc, #52]	; (80005d0 <main+0x3e8>)
+ 800059a:	4293      	cmp	r3, r2
+ 800059c:	ddf8      	ble.n	8000590 <main+0x3a8>
+						GPIOD_ODR &= ~(1<<15);
+ 800059e:	4b0b      	ldr	r3, [pc, #44]	; (80005cc <main+0x3e4>)
+ 80005a0:	681b      	ldr	r3, [r3, #0]
+ 80005a2:	4a0a      	ldr	r2, [pc, #40]	; (80005cc <main+0x3e4>)
+ 80005a4:	f423 4300 	bic.w	r3, r3, #32768	; 0x8000
+ 80005a8:	6013      	str	r3, [r2, #0]
+						for(i=0;i>=80000;i++);
+ 80005aa:	2300      	movs	r3, #0
+ 80005ac:	60fb      	str	r3, [r7, #12]
+ 80005ae:	e002      	b.n	80005b6 <main+0x3ce>
+ 80005b0:	68fb      	ldr	r3, [r7, #12]
+ 80005b2:	3301      	adds	r3, #1
+ 80005b4:	60fb      	str	r3, [r7, #12]
+ 80005b6:	68fb      	ldr	r3, [r7, #12]
+ 80005b8:	4a05      	ldr	r2, [pc, #20]	; (80005d0 <main+0x3e8>)
+ 80005ba:	4293      	cmp	r3, r2
+ 80005bc:	dcf8      	bgt.n	80005b0 <main+0x3c8>
+						for(j=0;j<5;j++)  //For LED BLUE
+ 80005be:	687b      	ldr	r3, [r7, #4]
+ 80005c0:	3301      	adds	r3, #1
+ 80005c2:	607b      	str	r3, [r7, #4]
+ 80005c4:	687b      	ldr	r3, [r7, #4]
+ 80005c6:	2b04      	cmp	r3, #4
+ 80005c8:	ddd9      	ble.n	800057e <main+0x396>
+					while((GPIOA_IDR & 0x01) == 1) // Switch Status On
+ 80005ca:	e649      	b.n	8000260 <main+0x78>
+ 80005cc:	40020c14 	.word	0x40020c14
+ 80005d0:	0001387f 	.word	0x0001387f
+
+080005d4 <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 80005d4:	480d      	ldr	r0, [pc, #52]	; (800060c <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 80005d6:	4685      	mov	sp, r0
+/* Call the clock system intitialization function.*/
+  bl  SystemInit
+ 80005d8:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 80005dc:	480c      	ldr	r0, [pc, #48]	; (8000610 <LoopForever+0x6>)
+  ldr r1, =_edata
+ 80005de:	490d      	ldr	r1, [pc, #52]	; (8000614 <LoopForever+0xa>)
+  ldr r2, =_sidata
+ 80005e0:	4a0d      	ldr	r2, [pc, #52]	; (8000618 <LoopForever+0xe>)
+  movs r3, #0
+ 80005e2:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 80005e4:	e002      	b.n	80005ec <LoopCopyDataInit>
+
+080005e6 <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 80005e6:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 80005e8:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 80005ea:	3304      	adds	r3, #4
+
+080005ec <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 80005ec:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 80005ee:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 80005f0:	d3f9      	bcc.n	80005e6 <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 80005f2:	4a0a      	ldr	r2, [pc, #40]	; (800061c <LoopForever+0x12>)
+  ldr r4, =_ebss
+ 80005f4:	4c0a      	ldr	r4, [pc, #40]	; (8000620 <LoopForever+0x16>)
+  movs r3, #0
+ 80005f6:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 80005f8:	e001      	b.n	80005fe <LoopFillZerobss>
+
+080005fa <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 80005fa:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 80005fc:	3204      	adds	r2, #4
+
+080005fe <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 80005fe:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 8000600:	d3fb      	bcc.n	80005fa <FillZerobss>
+
+/* Call static constructors */
+  bl __libc_init_array
+ 8000602:	f000 f811 	bl	8000628 <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
+ 8000606:	f7ff fdef 	bl	80001e8 <main>
+
+0800060a <LoopForever>:
+
+LoopForever:
+    b LoopForever
+ 800060a:	e7fe      	b.n	800060a <LoopForever>
+  ldr   r0, =_estack
+ 800060c:	20020000 	.word	0x20020000
+  ldr r0, =_sdata
+ 8000610:	20000000 	.word	0x20000000
+  ldr r1, =_edata
+ 8000614:	20000000 	.word	0x20000000
+  ldr r2, =_sidata
+ 8000618:	08000690 	.word	0x08000690
+  ldr r2, =_sbss
+ 800061c:	20000000 	.word	0x20000000
+  ldr r4, =_ebss
+ 8000620:	2000001c 	.word	0x2000001c
+
+08000624 <ADC_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 8000624:	e7fe      	b.n	8000624 <ADC_IRQHandler>
+	...
+
+08000628 <__libc_init_array>:
+ 8000628:	b570      	push	{r4, r5, r6, lr}
+ 800062a:	4d0d      	ldr	r5, [pc, #52]	; (8000660 <__libc_init_array+0x38>)
+ 800062c:	4c0d      	ldr	r4, [pc, #52]	; (8000664 <__libc_init_array+0x3c>)
+ 800062e:	1b64      	subs	r4, r4, r5
+ 8000630:	10a4      	asrs	r4, r4, #2
+ 8000632:	2600      	movs	r6, #0
+ 8000634:	42a6      	cmp	r6, r4
+ 8000636:	d109      	bne.n	800064c <__libc_init_array+0x24>
+ 8000638:	4d0b      	ldr	r5, [pc, #44]	; (8000668 <__libc_init_array+0x40>)
+ 800063a:	4c0c      	ldr	r4, [pc, #48]	; (800066c <__libc_init_array+0x44>)
+ 800063c:	f000 f818 	bl	8000670 <_init>
+ 8000640:	1b64      	subs	r4, r4, r5
+ 8000642:	10a4      	asrs	r4, r4, #2
+ 8000644:	2600      	movs	r6, #0
+ 8000646:	42a6      	cmp	r6, r4
+ 8000648:	d105      	bne.n	8000656 <__libc_init_array+0x2e>
+ 800064a:	bd70      	pop	{r4, r5, r6, pc}
+ 800064c:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8000650:	4798      	blx	r3
+ 8000652:	3601      	adds	r6, #1
+ 8000654:	e7ee      	b.n	8000634 <__libc_init_array+0xc>
+ 8000656:	f855 3b04 	ldr.w	r3, [r5], #4
+ 800065a:	4798      	blx	r3
+ 800065c:	3601      	adds	r6, #1
+ 800065e:	e7f2      	b.n	8000646 <__libc_init_array+0x1e>
+ 8000660:	08000688 	.word	0x08000688
+ 8000664:	08000688 	.word	0x08000688
+ 8000668:	08000688 	.word	0x08000688
+ 800066c:	0800068c 	.word	0x0800068c
+
+08000670 <_init>:
+ 8000670:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000672:	bf00      	nop
+ 8000674:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8000676:	bc08      	pop	{r3}
+ 8000678:	469e      	mov	lr, r3
+ 800067a:	4770      	bx	lr
+
+0800067c <_fini>:
+ 800067c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800067e:	bf00      	nop
+ 8000680:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8000682:	bc08      	pop	{r3}
+ 8000684:	469e      	mov	lr, r3
+ 8000686:	4770      	bx	lr
