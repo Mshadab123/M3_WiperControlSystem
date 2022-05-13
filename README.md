@@ -1,4 +1,12 @@
 # M3_WiperControlSystem
+# Codiga 
+![Quality](https://api.codiga.io/project/33348/score/svg)
+![Quality](https://api.codiga.io/project/33348/status/svg)
+
+# Codacy
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f035c208b8224c6880bc6addf055f9cc)](https://www.codacy.com/gh/Mshadab123/M3_WiperControlSystem/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Mshadab123/M3_WiperControlSystem&amp;utm_campaign=Badge_Grade)
+
+
 # Requriments
 
 ## About the project Wiper Control System
