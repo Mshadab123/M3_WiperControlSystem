@@ -1,6 +1,6 @@
 /**
  * @file carwiper1.c
- * @author Stephen.J
+ * @author M Shadab
  * @brief CAR WIPER CONTROL
  * @version 0.1
  * @date 2022-05-09
